@@ -20,9 +20,9 @@ if (!token) {
 const bot = new TelegramBot(token, { polling: true });
 
 // Rimuove eventuali webhook attivi che causano conflitti
-bot.deleteWebhook().catch(err => {
-  console.warn('Webhook già rimosso o non esistente:', err.message);
-});
+bot._telegram.deleteWebhook()
+  .then(() => console.log('Webhook rimosso correttamente'))
+  .catch(err => console.warn('Webhook già rimosso o errore:', err.message));
 
 
 bot.onText(/\/start/, (msg) => {
