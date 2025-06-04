@@ -5,15 +5,18 @@ const fetch = require('node-fetch');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-
-// bot effettivo
-
+//Variabili d'ambiente
+const SELF_URL = process.env.SELF_URL;
 const token = process.env.BOT_TOKEN;
+
+if (!SELF_URL) {
+  console.warn('Attenzione: SELF_URL non impostato. Il self-ping non funzionerà.');
+}
 if (!token) {
   console.error('BOT_TOKEN non trovato nelle variabili d\'ambiente');
   process.exit(1);
 }
-
+//Bot Telegram
 const bot = new TelegramBot(token, { polling: true });
 
 bot.onText(/\/start/, (msg) => {
@@ -65,10 +68,11 @@ app.listen(PORT, () => {
   console.log(`Server web in ascolto sulla porta ${PORT}`);
 });
 
-// Self ping
+//Self ping per mantenere il bot attivo su Render
 setInterval(() => {
   console.log('Self pinging...');
-  fetch(`http://localhost:${PORT}/`)
+  fetch(SELF_URL)
     .then(res => console.log('Ping OK'))
     .catch(err => console.error('Errore nel self-ping:', err));
-}, 5 * 60 * 1000);
+}, 5 * 60 * 1000); // ogni 5 minuti
+
