@@ -71,4 +71,4 @@ setInterval(() => {
   fetch(`http://localhost:${PORT}/`)
     .then(res => console.log('Ping OK'))
     .catch(err => console.error('Errore nel self-ping:', err));
-}, 5 * 60 * 1000); // 5 minuti
+}, 5 * 60 * 1000);
