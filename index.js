@@ -5,26 +5,30 @@ const fetch = require('node-fetch');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-//Variabili d'ambiente
 const SELF_URL = process.env.SELF_URL;
 const token = process.env.BOT_TOKEN;
 
 if (!SELF_URL) {
-  console.warn('Attenzione: SELF_URL non impostato. Il self-ping non funzionerà.');
+  console.warn('⚠️ Attenzione: SELF_URL non impostato. Il webhook non funzionerà.');
 }
 if (!token) {
-  console.error('BOT_TOKEN non trovato nelle variabili d\'ambiente');
+  console.error('❌ BOT_TOKEN non trovato nelle variabili d\'ambiente');
   process.exit(1);
 }
-//Bot Telegram
-const bot = new TelegramBot(token, { polling: true });
 
-// Rimuove eventuali webhook attivi che causano conflitti
-bot._telegram.deleteWebhook()
-  .then(() => console.log('Webhook rimosso correttamente'))
-  .catch(err => console.warn('Webhook già rimosso o errore:', err.message));
+// Bot Telegram (senza polling)
+const bot = new TelegramBot(token);
 
+// Middleware per accettare JSON da Telegram
+app.use(express.json());
 
+// Endpoint per ricevere aggiornamenti dal webhook
+app.post(`/bot${token}`, (req, res) => {
+  bot.processUpdate(req.body);
+  res.sendStatus(200);
+});
+
+// Comandi bot
 bot.onText(/\/start/, (msg) => {
   bot.sendMessage(msg.chat.id, 'Ciao uaglione comme stai. Usa /help per vedere i comandi disponibili.');
 });
@@ -59,27 +63,33 @@ bot.onText(/\/getToken/, (msg) => {
 });
 
 bot.on('message', (msg) => {
-  const knownCommands = ['/start', '/help', '/getToken', '/info', '/ciao','/getToken'];
+  const knownCommands = ['/start', '/help', '/getToken', '/info', '/ciao'];
   if (msg.text && knownCommands.some(cmd => msg.text.startsWith(cmd))) return;
   bot.sendMessage(msg.chat.id, 'Non ho capito. Usa /help per vedere i comandi disponibili.');
 });
 
-console.log('Bot avviato con successo!');
+console.log('🤖 Bot inizializzato con webhook.');
 
-// Server web express
-
+// Route base per test
 app.get('/', (req, res) => {
-  res.send('Bot è vivo!');
+  res.send('✅ Il bot è attivo!');
 });
 
+// Avvio del server Express + set del webhook
 app.listen(PORT, () => {
-  console.log(`Server web in ascolto sulla porta ${PORT}`);
+  console.log(`🚀 Server in ascolto sulla porta ${PORT}`);
+
+  bot.setWebHook(`${SELF_URL}/bot${token}`)
+    .then(() => console.log('🔗 Webhook impostato correttamente!'))
+    .catch(err => console.error('❌ Errore nel settaggio del webhook:', err));
 });
 
-//Self ping per mantenere il bot attivo su Render
-setInterval(() => {
-  console.log('Self pinging...');
-  fetch(SELF_URL)
-    .then(res => console.log('Ping OK'))
-    .catch(err => console.error('Errore nel self-ping:', err));
-}, 5 * 60 * 1000); // ogni 5 minuti
+// Optional: self-ping per Render (opzionale se usi cron o keep-alive)
+if (SELF_URL) {
+  setInterval(() => {
+    console.log('🔁 Self-pinging...');
+    fetch(SELF_URL)
+      .then(() => console.log('✅ Ping OK'))
+      .catch(err => console.error('❌ Errore nel self-ping:', err));
+  }, 5 * 60 * 1000); // ogni 5 minuti
+}
