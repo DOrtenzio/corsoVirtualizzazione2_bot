@@ -1,12 +1,12 @@
 require('dotenv').config();
 const TelegramBot = require('node-telegram-bot-api');
 const express = require('express');
-const fetch = require('node-fetch'); // solo se usi Node < 18
+const fetch = require('node-fetch');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// --- BOT TELEGRAM ---
+// bot effettivo
 
 const token = process.env.BOT_TOKEN;
 if (!token) {
@@ -55,17 +55,17 @@ bot.on('message', (msg) => {
 
 console.log('Bot avviato con successo!');
 
-// --- SERVER EXPRESS ---
+// Server web express
 
 app.get('/', (req, res) => {
-  res.send('Bot is alive!');
+  res.send('Bot è vivo!');
 });
 
 app.listen(PORT, () => {
   console.log(`Server web in ascolto sulla porta ${PORT}`);
 });
 
-// --- SELF-PING OGNI 5 MINUTI ---
+// Self ping
 setInterval(() => {
   console.log('Self pinging...');
   fetch(`http://localhost:${PORT}/`)
