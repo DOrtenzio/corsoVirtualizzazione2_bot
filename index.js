@@ -14,7 +14,7 @@ const bot = new TelegramBot(token, { polling: true });
 // Gestisci il comando /start
 bot.onText(/\/start/, (msg) => {
   const chatId = msg.chat.id;
-  bot.sendMessage(chatId, 'Ciao! Sono il tuo bot Telegram. Usa /help per vedere i comandi disponibili.');
+  bot.sendMessage(chatId, 'Ciao uaglione comme stai. Usa /help per vedere i comandi disponibili.');
 });
 
 // Gestisci il comando /help
@@ -25,6 +25,8 @@ Comandi disponibili:
 /start - Avvia il bot
 /help - Mostra questo messaggio di aiuto
 /info - Informazioni sul bot
+/ciao - Ciao bro
+/getToken - Ottieni il token
 `);
 });
 
@@ -38,6 +40,22 @@ Ambiente: ${process.env.NODE_ENV || 'development'}
 `);
 });
 
+// Gestisci il comando /ciao
+bot.onText(/\/ciao/, (msg) => {
+  const chatId = msg.chat.id;
+  bot.sendMessage(chatId, `
+CIAOOOOO BROO
+`);
+});
+
+// Gestisci il comando /getToken
+bot.onText(/\/getToken/, (msg) => {
+  const chatId = msg.chat.id;
+  bot.sendMessage(chatId, `
+Suca
+`);
+});
+
 // Gestisci messaggi non riconosciuti
 bot.on('message', (msg) => {
   const chatId = msg.chat.id;
@@ -45,7 +63,9 @@ bot.on('message', (msg) => {
   // Ignora i comandi che abbiamo già gestito
   if (msg.text && (msg.text.startsWith('/start') || 
                    msg.text.startsWith('/help') || 
-                   msg.text.startsWith('/info'))) {
+                   msg.text.startsWith('/getToken') || 
+                   msg.text.startsWith('/info') ||
+                   msg.text.startsWith('/ciao') )) {
     return;
   }
   
