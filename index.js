@@ -31,23 +31,25 @@ Comandi disponibili:
 /info - Informazioni sul bot
 /ciao - Ciao bro
 /getToken - Ottieni il token
+Per altre informazioni, visita il nostro sito web: https://www.nonEsiste:-).it
 `);
 });
 
 bot.onText(/\/info/, (msg) => {
   bot.sendMessage(msg.chat.id, `
 Bot creato durante il corso di Containerizzazione e Deployment.
-Versione: 1.0.0
+Versione: 1.0.2
 Ambiente: ${process.env.NODE_ENV || 'development'}
 `);
 });
 
 bot.onText(/\/ciao/, (msg) => {
-  bot.sendMessage(msg.chat.id, 'CIAOOOOO BROO');
+  bot.sendMessage(msg.chat.id, 'Ciao bro! Come va?');
+  bot.sendSticker(msg.chat.id, 'https://t.me/addstickers/Marameo');
 });
 
 bot.onText(/\/getToken/, (msg) => {
-  bot.sendMessage(msg.chat.id, 'Suca');
+  bot.sendMessage(msg.chat.id, 'Marameo!');
 });
 
 bot.on('message', (msg) => {
