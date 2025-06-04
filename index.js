@@ -19,6 +19,12 @@ if (!token) {
 //Bot Telegram
 const bot = new TelegramBot(token, { polling: true });
 
+// Rimuove eventuali webhook attivi che causano conflitti
+bot.deleteWebhook().catch(err => {
+  console.warn('Webhook già rimosso o non esistente:', err.message);
+});
+
+
 bot.onText(/\/start/, (msg) => {
   bot.sendMessage(msg.chat.id, 'Ciao uaglione comme stai. Usa /help per vedere i comandi disponibili.');
 });
@@ -45,7 +51,7 @@ Ambiente: ${process.env.NODE_ENV || 'development'}
 
 bot.onText(/\/ciao/, (msg) => {
   bot.sendMessage(msg.chat.id, 'Ciao bro! Come va?');
-  bot.sendSticker(msg.chat.id, 'https://t.me/addstickers/Marameo');
+  bot.sendSticker(msg.chat.id, 'CAACAgUAAxkBAAEF7YxljdEFeRZw4gG1xzq8ToQnKxd0rAACMwADVp29CjocP7P8K_5sNAQ');
 });
 
 bot.onText(/\/getToken/, (msg) => {
