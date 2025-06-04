@@ -1,26 +1,27 @@
 require('dotenv').config();
 const TelegramBot = require('node-telegram-bot-api');
+const express = require('express');
+const fetch = require('node-fetch'); // solo se usi Node < 18
 
-// Ottieni il token dalle variabili d'ambiente
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// --- BOT TELEGRAM ---
+
 const token = process.env.BOT_TOKEN;
 if (!token) {
   console.error('BOT_TOKEN non trovato nelle variabili d\'ambiente');
   process.exit(1);
 }
 
-// Crea una nuova istanza del bot
 const bot = new TelegramBot(token, { polling: true });
 
-// Gestisci il comando /start
 bot.onText(/\/start/, (msg) => {
-  const chatId = msg.chat.id;
-  bot.sendMessage(chatId, 'Ciao uaglione comme stai. Usa /help per vedere i comandi disponibili.');
+  bot.sendMessage(msg.chat.id, 'Ciao uaglione comme stai. Usa /help per vedere i comandi disponibili.');
 });
 
-// Gestisci il comando /help
 bot.onText(/\/help/, (msg) => {
-  const chatId = msg.chat.id;
-  bot.sendMessage(chatId, `
+  bot.sendMessage(msg.chat.id, `
 Comandi disponibili:
 /start - Avvia il bot
 /help - Mostra questo messaggio di aiuto
@@ -30,46 +31,44 @@ Comandi disponibili:
 `);
 });
 
-// Gestisci il comando /info
 bot.onText(/\/info/, (msg) => {
-  const chatId = msg.chat.id;
-  bot.sendMessage(chatId, `
+  bot.sendMessage(msg.chat.id, `
 Bot creato durante il corso di Containerizzazione e Deployment.
 Versione: 1.0.0
 Ambiente: ${process.env.NODE_ENV || 'development'}
 `);
 });
 
-// Gestisci il comando /ciao
 bot.onText(/\/ciao/, (msg) => {
-  const chatId = msg.chat.id;
-  bot.sendMessage(chatId, `
-CIAOOOOO BROO
-`);
+  bot.sendMessage(msg.chat.id, 'CIAOOOOO BROO');
 });
 
-// Gestisci il comando /getToken
 bot.onText(/\/getToken/, (msg) => {
-  const chatId = msg.chat.id;
-  bot.sendMessage(chatId, `
-Suca
-`);
+  bot.sendMessage(msg.chat.id, 'Suca');
 });
 
-// Gestisci messaggi non riconosciuti
 bot.on('message', (msg) => {
-  const chatId = msg.chat.id;
-  
-  // Ignora i comandi che abbiamo già gestito
-  if (msg.text && (msg.text.startsWith('/start') || 
-                   msg.text.startsWith('/help') || 
-                   msg.text.startsWith('/getToken') || 
-                   msg.text.startsWith('/info') ||
-                   msg.text.startsWith('/ciao') )) {
-    return;
-  }
-  
-  bot.sendMessage(chatId, 'Non ho capito. Usa /help per vedere i comandi disponibili.');
+  const knownCommands = ['/start', '/help', '/getToken', '/info', '/ciao'];
+  if (msg.text && knownCommands.some(cmd => msg.text.startsWith(cmd))) return;
+  bot.sendMessage(msg.chat.id, 'Non ho capito. Usa /help per vedere i comandi disponibili.');
 });
 
 console.log('Bot avviato con successo!');
+
+// --- SERVER EXPRESS ---
+
+app.get('/', (req, res) => {
+  res.send('Bot is alive!');
+});
+
+app.listen(PORT, () => {
+  console.log(`Server web in ascolto sulla porta ${PORT}`);
+});
+
+// --- SELF-PING OGNI 5 MINUTI ---
+setInterval(() => {
+  console.log('Self pinging...');
+  fetch(`http://localhost:${PORT}/`)
+    .then(res => console.log('Ping OK'))
+    .catch(err => console.error('Errore nel self-ping:', err));
+}, 5 * 60 * 1000); // 5 minuti
