@@ -48,7 +48,7 @@ bot.onText(/\/getToken/, (msg) => {
 });
 
 bot.on('message', (msg) => {
-  const knownCommands = ['/start', '/help', '/getToken', '/info', '/ciao'];
+  const knownCommands = ['/start', '/help', '/getToken', '/info', '/ciao','/getToken'];
   if (msg.text && knownCommands.some(cmd => msg.text.startsWith(cmd))) return;
   bot.sendMessage(msg.chat.id, 'Non ho capito. Usa /help per vedere i comandi disponibili.');
 });
