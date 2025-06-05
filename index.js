@@ -61,14 +61,17 @@ bot.onText(/\/getToken/, (msg) => {
 });
 
 bot.onText(/\/photos/, (msg) => {
+  const chatId = msg.chat.id;
   bot.sendPhoto(chatId, 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.lastampa.it%2Fla-zampa%2Fgatti%2F2019%2F08%2F01%2Fnews%2Flui_e_zuu_e_non_esiste_gatto_piu_buffo_di_lui-814456%2F&psig=AOvVaw0fXe4MnU1IbO-e1DJ7f6ra&ust=1749213417700000&source=images&cd=vfe&opi=89978449&ved=0CBUQjRxqFwoTCIjf5_2l2o0DFQAAAAAdAAAAABAE');
 });
 
 bot.onText(/\/sticker/, (msg) => {
+  const chatId = msg.chat.id;
   bot.sendSticker(chatId, 'https://tlgrm.eu/_/stickers/9e5/06e/9e506e8c-5e59-4b90-8c72-7c6e6d659c3e/2.webp');
 });
 
 bot.onText(/\/gif/, (msg) => {
+  const chatId = msg.chat.id;
   bot.sendAnimation(chatId, 'https://www.google.com/imgres?q=gatto%20buffo%20gif&imgurl=https%3A%2F%2Fpersbaglio.wordpress.com%2Fwp-content%2Fuploads%2F2013%2F05%2Ffunny_gifs_catsmob_com_02694_002.gif&imgrefurl=https%3A%2F%2Fpersbaglio.wordpress.com%2F2013%2F05%2F03%2Fgatti-gif%2F&docid=hyYcO9PA776mYM&tbnid=2QNOQ9R8aMAq_M&vet=12ahUKEwjP2cWFptqNAxVLgf0HHTX4MoUQM3oECHAQAA..i&w=399&h=224&hcb=2&ved=2ahUKEwjP2cWFptqNAxVLgf0HHTX4MoUQM3oECHAQAA');
 });
 
