@@ -9,10 +9,10 @@ const SELF_URL = process.env.SELF_URL;
 const token = process.env.BOT_TOKEN;
 
 if (!SELF_URL) {
-  console.warn('⚠️ Attenzione: SELF_URL non impostato. Il webhook non funzionerà.');
+  console.warn('Attenzione: SELF_URL non impostato.');
 }
 if (!token) {
-  console.error('❌ BOT_TOKEN non trovato nelle variabili d\'ambiente');
+  console.error('BOT_TOKEN non trovato nelle variabili d\'ambiente');
   process.exit(1);
 }
 
@@ -68,7 +68,7 @@ bot.on('message', (msg) => {
   bot.sendMessage(msg.chat.id, 'Non ho capito. Usa /help per vedere i comandi disponibili.');
 });
 
-console.log('🤖 Bot inizializzato con webhook.');
+console.log('Bot inizializzato con successo.');
 
 // Route base per test
 app.get('/', (req, res) => {
@@ -77,14 +77,13 @@ app.get('/', (req, res) => {
 
 // Avvio del server Express + set del webhook
 app.listen(PORT, () => {
-  console.log(`🚀 Server in ascolto sulla porta ${PORT}`);
+  console.log(`Server in ascolto sulla porta ${PORT}`);
 
   bot.setWebHook(`${SELF_URL}/bot${token}`)
-    .then(() => console.log('🔗 Webhook impostato correttamente!'))
-    .catch(err => console.error('❌ Errore nel settaggio del webhook:', err));
+    .then(() => console.log('Webhook impostato correttamente!'))
+    .catch(err => console.error('Errore nel settaggio del webhook:', err));
 });
 
-// Optional: self-ping per Render (opzionale se usi cron o keep-alive)
 if (SELF_URL) {
   setInterval(() => {
     console.log('🔁 Self-pinging...');
