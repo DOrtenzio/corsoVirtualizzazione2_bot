@@ -16,13 +16,9 @@ if (!token) {
   process.exit(1);
 }
 
-// Bot Telegram (senza polling)
+// Bot Telegram
 const bot = new TelegramBot(token);
-
-// Middleware per accettare JSON da Telegram
 app.use(express.json());
-
-// Endpoint per ricevere aggiornamenti dal webhook
 app.post(`/bot${token}`, (req, res) => {
   bot.processUpdate(req.body);
   res.sendStatus(200);
