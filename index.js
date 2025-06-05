@@ -64,6 +64,15 @@ bot.on('message', (msg) => {
   bot.sendMessage(msg.chat.id, 'Non ho capito. Usa /help per vedere i comandi disponibili.');
 });
 
+/* Altri comandi utili
+bot.sendPhoto(chatId, 'percorso/o/url/della/foto.jpg');
+bot.sendSticker(chatId, 'file_id_o_url_dello_sticker');
+bot.sendDocument(chatId, 'percorso/o/url/del/documento.pdf');
+bot.sendAnimation(chatId, 'percorso/o/url/della/gif.gif');
+bot.sendAudio(chatId, 'percorso/o/url/dell/audio.mp3');
+bot.sendVoice(chatId, 'percorso/o/url/della/voce.ogg');
+*/
+
 console.log('Bot inizializzato con successo.');
 
 // Route base per test
