@@ -57,6 +57,8 @@ Un aspetto fondamentale di questo progetto è la sua capacità di mantenersi att
 
 Per aggirare questo limite, il web server implementa un meccanismo di **auto-ping**: a intervalli regolari (ogni 5 minuti), il server effettua una richiesta HTTP verso sé stesso (`SELF_URL`). Questo "auto-ping" impedisce al servizio di hosting di considerare l'applicazione inattiva, mantenendo così il bot sempre operativo e pronto a rispondere alle richieste degli utenti o eseguire le operazioni programmate.
 
+![image](https://github.com/user-attachments/assets/48a48bce-b23f-4c20-b9ba-8f1115cafd3b)
+
 ---
 
 ## Integrazione su Render come Web Service
