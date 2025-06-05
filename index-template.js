@@ -2,13 +2,11 @@ require('dotenv').config();
 const TelegramBot = require('node-telegram-bot-api');
 const express = require('express');
 const fetch = require('node-fetch');
-const hangman = require('./hangman'); // <--- IMPORTA IL MODULO IMPICCATO
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const SELF_URL = process.env.SELF_URL;
 const token = process.env.BOT_TOKEN;
-
 //Controllo dell'impostazione delle variabili d'ambiente
 if (!SELF_URL) {
   console.warn('Attenzione: SELF_URL non impostato.');
@@ -26,7 +24,7 @@ app.post(`/bot${token}`, (req, res) => {
   res.sendStatus(200);
 });
 
-// Comandi bot classici
+// Comandi bot
 bot.onText(/\/start/, (msg) => {
   bot.sendMessage(msg.chat.id, 'Ciao uaglione comme stai. Usa /help per vedere i comandi disponibili.');
 });
@@ -42,7 +40,6 @@ Comandi disponibili:
 /photos - Ottieni una foto
 /gif - Ottieni una gif
 /sticker - Ottieni uno sticker
-/impiccato - Gioca all'impiccato!
 Per altre informazioni, visita il nostro sito web: https://www.nonEsiste:-).it
 `);
 });
@@ -78,23 +75,10 @@ bot.onText(/\/gif/, (msg) => {
   bot.sendAnimation(chatId, 'https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif');
 });
 
-// Impiccato: comando per iniziare
-bot.onText(/\/impiccato/, (msg) => {
-  bot.sendMessage(msg.chat.id, hangman.startGame(msg.chat.id));
-});
-
-// Gestione tentativi impiccato (lettera singola, solo se partita attiva)
-// NB: Questo deve restare DOPO i comandi classici per non bloccarli
 bot.on('message', (msg) => {
-  const knownCommands = ['/start', '/help', '/getToken', '/info', '/ciao', '/photos', '/sticker', '/gif', '/impiccato'];
+  const knownCommands = ['/start', '/help', '/getToken', '/info', '/ciao', '/photos', '/sticker', '/gif'];
   if (msg.text && knownCommands.some(cmd => msg.text.startsWith(cmd))) return;
-
-  // Se c'è una partita attiva, interpreta la risposta come tentativo
-  if (hangman.games[msg.chat.id]) {
-    bot.sendMessage(msg.chat.id, hangman.guess(msg.chat.id, msg.text.trim()));
-  } else {
-    bot.sendMessage(msg.chat.id, 'Non ho capito. Usa /help per vedere i comandi disponibili.');
-  }
+  bot.sendMessage(msg.chat.id, 'Non ho capito. Usa /help per vedere i comandi disponibili.');
 });
 
 /* Altri comandi utili
@@ -122,7 +106,6 @@ app.listen(PORT, () => {
     .catch(err => console.error('Errore nel settaggio del webhook:', err));
 });
 
-// Self-ping per non far addormentare l'app
 if (SELF_URL) {
   setInterval(() => {
     console.log('🔁 Self-pinging...');
